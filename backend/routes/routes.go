@@ -10,6 +10,9 @@ func RegisterRoutes(r *gin.Engine) {
 
 	r.GET("/ping", helloWorld)
 
+	// User
+	r.GET("/users", getUsers)
+
 }
 
 func helloWorld(c *gin.Context) {
