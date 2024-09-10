@@ -2,18 +2,29 @@ package middlewares
 
 import (
 	"net/http"
+	"strings"
 
 	"example.com/anon-project/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func Authenticate(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
+	authHeader := c.Request.Header.Get("Authorization")
 
-	if token == "" {
+	if authHeader == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorize"})
 		return
 	}
+
+	// Split the header value into parts
+	parts := strings.Split(authHeader, " ")
+
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Not authorize"})
+		return
+	}
+
+	token := parts[1]
 
 	id, err := utils.VerifyToken(token)
 
@@ -23,4 +34,5 @@ func Authenticate(c *gin.Context) {
 	}
 
 	c.Set("user_id", id)
+	c.Next()
 }
