@@ -1,9 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"os"
 
+	"example.com/anon-project/db"
+	"example.com/anon-project/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -15,11 +16,11 @@ func main() {
 		panic("could not load .env")
 	}
 
+	db.InitDB()
+
 	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Hellow World!"})
-	})
+	routes.RegisterRoutes(r)
 
 	port := ":" + os.Getenv("PORT")
 	r.Run(port)
