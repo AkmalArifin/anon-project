@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"example.com/anon-project/models"
+	"example.com/anon-project/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -131,5 +132,12 @@ func login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Login success"})
+	token, err := utils.GenerateToken(user.ID, user.Username.String)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Login success", "token": token})
 }
