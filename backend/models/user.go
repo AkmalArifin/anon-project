@@ -1,20 +1,22 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"example.com/anon-project/db"
 	"example.com/anon-project/utils"
+	"github.com/guregu/null"
 )
 
 type User struct {
-	ID        int64    `json:"id"`
-	Username  string   `json:"username"`
-	Email     string   `json:"email"`
-	Password  string   `json:"password"`
-	CreatedAt NullTime `json:"created_at"`
-	UpdatedAt NullTime `json:"updated_at"`
-	DeletedAt NullTime `json:"deleted_at"`
+	ID        int64       `json:"id"`
+	Username  null.String `json:"username"`
+	Email     null.String `json:"email"`
+	Password  null.String `json:"password"`
+	CreatedAt NullTime    `json:"created_at"`
+	UpdatedAt NullTime    `json:"updated_at"`
+	DeletedAt NullTime    `json:"deleted_at"`
 }
 
 func GetAllUsers() ([]User, error) {
@@ -68,14 +70,16 @@ func (u *User) Save() error {
 
 	defer stmt.Close()
 
-	u.CreatedAt.Time = time.Now()
-	u.UpdatedAt.Time = time.Now()
-
-	u.Password, err = utils.HashPassword(u.Password)
+	u.Password.String, err = utils.HashPassword(u.Password.String)
 
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(time.Now())
+
+	u.CreatedAt.SetValue(time.Now())
+	u.UpdatedAt.SetValue(time.Now())
 
 	results, err := stmt.Exec(u.Username, u.Email, u.Password, u.CreatedAt, u.UpdatedAt)
 
@@ -102,9 +106,9 @@ func (u *User) Update() error {
 
 	defer stmt.Close()
 
-	u.UpdatedAt.Time = time.Now()
+	u.UpdatedAt.SetValue(time.Now())
 
-	_, err = stmt.Exec(u.Username, u.Email, u.Password, u.UpdatedAt, u.DeletedAt, u.ID)
+	_, err = stmt.Exec(u.Username, u.Email, u.Password, u.UpdatedAt, u.ID)
 
 	return err
 }
@@ -112,7 +116,7 @@ func (u *User) Update() error {
 func (u *User) Delete() error {
 	query := `
 	UPDATE users
-	SET deleted_at = ?
+	SET updated_at = ?, deleted_at = ?
 	WHERE id = ?
 	`
 
@@ -124,9 +128,10 @@ func (u *User) Delete() error {
 
 	defer stmt.Close()
 
-	u.DeletedAt.Time = time.Now()
+	u.UpdatedAt.SetValue(time.Now())
+	u.DeletedAt.SetValue(time.Now())
 
-	_, err = stmt.Exec(u.DeletedAt, u.ID)
+	_, err = stmt.Exec(u.UpdatedAt, u.DeletedAt, u.ID)
 
 	return err
 }

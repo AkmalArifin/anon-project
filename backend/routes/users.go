@@ -42,7 +42,7 @@ func createUser(c *gin.Context) {
 	err := c.ShouldBindJSON(&user)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not bind JSON", "error": err.Error()})
 		return
 	}
 
@@ -79,10 +79,11 @@ func updateUser(c *gin.Context) {
 		return
 	}
 
+	user.ID = userID
 	err = user.Update()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error()})
 		return
 	}
 
