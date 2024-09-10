@@ -141,3 +141,22 @@ func login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Login success", "token": token})
 }
+
+func signup(c *gin.Context) {
+	var user models.User
+	err := c.ShouldBindJSON(&user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not bind JSON", "error": err.Error()})
+		return
+	}
+
+	err = user.Save()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, user)
+}
