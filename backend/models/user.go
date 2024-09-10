@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -134,4 +135,27 @@ func (u *User) Delete() error {
 	_, err = stmt.Exec(u.UpdatedAt, u.DeletedAt, u.ID)
 
 	return err
+}
+
+func (u *User) ValidateCredentials() error {
+	query := "SELECT username, password FROM users WHERE email = ?"
+	row := db.DB.QueryRow(query, u.Email)
+
+	var username string
+	var retrievedPassword string
+	err := row.Scan(&username, &retrievedPassword)
+
+	if err != nil {
+		return errors.New("credentials invalid")
+	}
+
+	isPasswordValid := utils.CompareHashPassword(u.Password.String, retrievedPassword)
+
+	if !isPasswordValid {
+		return errors.New("credentials invalid")
+	}
+
+	u.Username.String = username
+
+	return nil
 }
