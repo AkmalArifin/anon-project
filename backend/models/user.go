@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"example.com/anon-project/db"
@@ -57,6 +56,20 @@ func GetUserByID(userID int64) (User, error) {
 	return user, nil
 }
 
+func GetUserByUsername(username string) (User, error) {
+	query := `SELECT * FROM users WHERE username = ?`
+	row := db.DB.QueryRow(query, username)
+
+	var user User
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
+
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
+}
+
 func (u *User) Save() error {
 	query := `
 	INSERT INTO users(username, email, password, created_at, updated_at)
@@ -76,8 +89,6 @@ func (u *User) Save() error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(time.Now())
 
 	u.CreatedAt.SetValue(time.Now())
 	u.UpdatedAt.SetValue(time.Now())
@@ -138,12 +149,13 @@ func (u *User) Delete() error {
 }
 
 func (u *User) ValidateCredentials() error {
-	query := "SELECT username, password FROM users WHERE email = ?"
+	query := "SELECT id, username, password FROM users WHERE email = ?"
 	row := db.DB.QueryRow(query, u.Email)
 
+	var id int64
 	var username string
 	var retrievedPassword string
-	err := row.Scan(&username, &retrievedPassword)
+	err := row.Scan(&id, &username, &retrievedPassword)
 
 	if err != nil {
 		return errors.New("credentials invalid")
@@ -156,6 +168,7 @@ func (u *User) ValidateCredentials() error {
 	}
 
 	u.Username.String = username
+	u.ID = id
 
 	return nil
 }

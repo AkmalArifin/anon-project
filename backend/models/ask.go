@@ -63,7 +63,7 @@ func GetAskByUserID(userID int64) ([]Ask, error) {
 
 	for rows.Next() {
 		var ask Ask
-		err = rows.Scan(&ask.ID, &ask.UserID, &ask.Question, &ask.CreatedAt)
+		err = rows.Scan(&ask.ID, &ask.UserID, &ask.Question, &ask.IsRead, &ask.CreatedAt)
 
 		if err != nil {
 			return nil, err
@@ -78,7 +78,7 @@ func GetAskByUserID(userID int64) ([]Ask, error) {
 func (a *Ask) Save() error {
 	query := `
 	INSERT INTO ask_log(user_id, question, is_read, created_at)
-	VALUES (?, ?, ? ?)
+	VALUES (?, ?, ?, ?)
 	`
 
 	stmt, err := db.DB.Prepare(query)

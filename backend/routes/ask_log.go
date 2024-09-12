@@ -39,7 +39,7 @@ func getAskLogByUser(c *gin.Context) {
 	asks, err := models.GetAskByUserID(userID)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data", "error": err.Error()})
 		return
 	}
 
@@ -47,18 +47,28 @@ func getAskLogByUser(c *gin.Context) {
 }
 
 func createAskLog(c *gin.Context) {
-	var ask models.Ask
-	err := c.ShouldBindJSON(&ask)
+	var question models.Question
+	err := c.ShouldBindJSON(&question)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse data"})
 		return
 	}
 
+	user, err := models.GetUserByUsername(question.Username.String)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not find user"})
+		return
+	}
+
+	var ask models.Ask
+	ask.UserID = user.ID
+	ask.Question = question.Question
 	err = ask.Save()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "err": err.Error()})
 		return
 	}
 
