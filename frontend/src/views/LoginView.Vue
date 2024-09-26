@@ -11,9 +11,13 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
+
 
 async function loginClicked(event: Event) {
     event.preventDefault();
@@ -26,9 +30,14 @@ async function loginClicked(event: Event) {
         const response = axios.post("http://localhost:8082/login", data)
             .then(response => {
                 if (response.status == 200) {
-                    const token = response.data.token   
-                    sessionStorage.setItem('jwtToken', token);
-                }
+                    const data : {
+                        message: string,
+                        token: string,
+                    } = response.data 
+                    sessionStorage.setItem('jwtToken', data.token);
+
+                    router.push({name: 'dashboard'})
+                }   
             });
     } catch (e) {
         console.error(e)
