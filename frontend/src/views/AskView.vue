@@ -20,7 +20,6 @@ import axios from 'axios';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
-import { error } from 'console';
 
 const route = useRoute();
 const router = useRouter();
@@ -28,8 +27,19 @@ const router = useRouter();
 const message = ref("");
 const count = ref(message.value.length);
 
+// Photo Profile
 var photoUrl = "/profile-picture.png"
 
+axios.get(`http://localhost:8082/users/username/${route.params.username}`)
+    .then(response => {
+        if (response.data.photo_profile !== null) {
+            photoUrl = response.data.photo_profile
+        }
+    }).catch(error => {
+        console.error(error)
+    })
+
+// Setting Textarea
 document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.getElementById("message");
     const counter = document.getElementById("counter");
@@ -50,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 async function sendClicked() {
-
     if (count.value <= 0 || count.value > 250) {
         Swal.fire({
             title: "Fill this field and keep it under the limit.",
@@ -87,7 +96,6 @@ async function sendClicked() {
                     confirmButtonText: 'Close',
                     confirmButtonColor: '#8399D9',
                 });
-
                 console.error(error)
             })
     }
