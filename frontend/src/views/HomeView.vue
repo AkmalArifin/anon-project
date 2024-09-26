@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <h1>Home</h1>
+    <div class="container">
+        <h1>Hnn<span style="color: var(--color-primary)">?</span></h1>
     </div>
 </template>
 
@@ -15,5 +15,15 @@ export default {
 </script>
 
 <style scoped>
+.container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-family: var(--ff-logo);
+}
 
 </style>
