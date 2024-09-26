@@ -1,7 +1,0 @@
-POST http://localhost:8082/ask-log
-Content-Type: application/json
-
-{
-    "username": "ikanikan",
-    "question": "Kamu siapa?"
-}

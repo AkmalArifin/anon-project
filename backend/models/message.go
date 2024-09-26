@@ -2,7 +2,7 @@ package models
 
 import "github.com/guregu/null"
 
-type Question struct {
+type Message struct {
 	Username null.String `json:"username"`
-	Question null.String `json:"question"`
+	Message  null.String `json:"message"`
 }

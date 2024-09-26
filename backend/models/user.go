@@ -10,13 +10,14 @@ import (
 )
 
 type User struct {
-	ID        int64       `json:"id"`
-	Username  null.String `json:"username"`
-	Email     null.String `json:"email"`
-	Password  null.String `json:"password"`
-	CreatedAt NullTime    `json:"created_at"`
-	UpdatedAt NullTime    `json:"updated_at"`
-	DeletedAt NullTime    `json:"deleted_at"`
+	ID           int64       `json:"id"`
+	Username     null.String `json:"username"`
+	Email        null.String `json:"email"`
+	Password     null.String `json:"password"`
+	PhotoProfile null.String `json:"photo_profile"`
+	CreatedAt    NullTime    `json:"created_at"`
+	UpdatedAt    NullTime    `json:"updated_at"`
+	DeletedAt    NullTime    `json:"deleted_at"`
 }
 
 func GetAllUsers() ([]User, error) {
@@ -30,7 +31,7 @@ func GetAllUsers() ([]User, error) {
 
 	for rows.Next() {
 		var user User
-		err = rows.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
+		err = rows.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.PhotoProfile, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
 
 		if err != nil {
 			return nil, err
@@ -47,7 +48,7 @@ func GetUserByID(userID int64) (User, error) {
 	row := db.DB.QueryRow(query, userID)
 
 	var user User
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.PhotoProfile, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
 
 	if err != nil {
 		return User{}, err
@@ -61,7 +62,7 @@ func GetUserByUsername(username string) (User, error) {
 	row := db.DB.QueryRow(query, username)
 
 	var user User
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.PhotoProfile, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
 
 	if err != nil {
 		return User{}, err
@@ -72,8 +73,8 @@ func GetUserByUsername(username string) (User, error) {
 
 func (u *User) Save() error {
 	query := `
-	INSERT INTO users(username, email, password, created_at, updated_at)
-	VALUES (?, ?, ?, ?, ?)
+	INSERT INTO users(username, email, password, photo_profile, created_at, updated_at)
+	VALUES (?, ?, ?, ?, ?, ?)
 	`
 
 	stmt, err := db.DB.Prepare(query)
@@ -93,7 +94,7 @@ func (u *User) Save() error {
 	u.CreatedAt.SetValue(time.Now())
 	u.UpdatedAt.SetValue(time.Now())
 
-	results, err := stmt.Exec(u.Username, u.Email, u.Password, u.CreatedAt, u.UpdatedAt)
+	results, err := stmt.Exec(u.Username, u.Email, u.Password, u.PhotoProfile, u.CreatedAt, u.UpdatedAt)
 
 	if err != nil {
 		return err
@@ -120,7 +121,7 @@ func (u *User) Update() error {
 
 	u.UpdatedAt.SetValue(time.Now())
 
-	_, err = stmt.Exec(u.Username, u.Email, u.Password, u.UpdatedAt, u.ID)
+	_, err = stmt.Exec(u.Username, u.Email, u.Password, u.PhotoProfile, u.UpdatedAt, u.ID)
 
 	return err
 }
