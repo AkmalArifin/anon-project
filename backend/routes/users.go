@@ -38,6 +38,19 @@ func getUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+func getUserUsername(c *gin.Context) {
+	username := c.Param("username")
+
+	user, err := models.GetUserByUsername(username)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 func createUser(c *gin.Context) {
 	var user models.User
 	err := c.ShouldBindJSON(&user)
