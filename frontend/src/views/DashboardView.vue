@@ -8,7 +8,10 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+import { parseJwt } from '../utils/jwt';
 
 interface Question {
     id: number;
@@ -16,27 +19,37 @@ interface Question {
     question: string;
     is_read: boolean;
     created_at: string;
-}
+};
 
-const questions = ref<Question[]>()
+const router = useRouter();
 
 const token = sessionStorage.getItem('jwtToken');
+
+var jwt
+
+if (token) {
+    const jwt = parseJwt(token)
+} else {
+    router.push({name: "login"})
+}
+
+const user = axios.get(`http://localhost:8082/users/${jwt.id}`)
+
+const questions = ref<Question[]>();
+
 
 axios.get("http://localhost:8082/ask-log", {
     headers: {
         'Authorization': `Bearer ${token}`
     }
 }).then(response => {
-    questions.value = response.data
-    console.log(questions.value)
+    questions.value = response.data;
+    console.log(questions.value);
 }).catch(error => {
-    console.error(error)
+    console.error(error);
+
+    // please login first
 })
-
-async function getData(event: Event) {
-    
-}
-
 </script>
 
 <script lang="ts">

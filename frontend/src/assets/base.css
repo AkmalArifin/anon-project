@@ -19,6 +19,14 @@
   --grey-dark: #383636;
 
   --section-gap: 160px;
+
+  --shadow: 
+    inset 0 0 0.5px 1px hsla(0, 0%,100%, 0.075), 
+    0 0 0 1px hsla(0, 0%, 0%, 0.05),
+    0 0.3px 0.4px hsla(0, 0%, 0%, 0.02),
+    0 0.9px 1.5px hsla(0, 0%, 0%, 0.045),
+    0 3.5px 6px hsla(0, 0%, 0%, 0.09);
+  --transition: 0.2s ease-in-out;
 }
 
 :root {
@@ -52,6 +60,7 @@ body {
   min-height: 100vh;
   color: var(--color-text);
   background: var(--color-background);
+  font-family: var(--ff);
   
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

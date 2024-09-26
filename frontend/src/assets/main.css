@@ -3,11 +3,6 @@
 h1 {
   font: var(--h1);
   letter-spacing: -2%;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-  font-variation-settings:
-    "slnt" -10;
 }
 
 h2 {
@@ -37,3 +32,6 @@ h4 {
   font: var(--p3);
 }
 
+.logo {
+  font-family: var(--ff-logo);
+} 
