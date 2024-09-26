@@ -25,13 +25,13 @@ const router = useRouter();
 
 const token = sessionStorage.getItem('jwtToken');
 
-// var jwt
+var jwt
 
-// if (token) {
-//     const jwt = parseJwt(token)
-// } else {
-//     router.push({name: "login"})
-// }
+if (token) {
+    const jwt = parseJwt(token)
+} else {
+    router.push({name: "login"})
+}
 
 const user = axios.get(`http://localhost:8082/users/${jwt.id}`)
 
