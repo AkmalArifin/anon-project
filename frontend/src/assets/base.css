@@ -1,5 +1,6 @@
 :root {
-  --ff: "Open Sans", sans-serif;
+  --ff: "Sora", sans-serif;
+  --ff-logo: "Englebert", cursive;
   --h1: bold min(4rem, 12vw)/ 1em var(--ff);
   --h2: bold min(3rem, 9vw)/ 1em var(--ff);
   --h3: bold min(2.25rem, 6.75vw)/1.2em var(--ff);
@@ -8,17 +9,20 @@
   --p2: 1rem/1.6em var(--ff);
   --p3: .75rem/2em var(--ff);
 
-  --color-primary: #6D3B47;
-  --color-secondary: #282F44;
-  --black: #1E1E1E;
+  --color-primary: #D37289;
+  --color-secondary: #8399D9;
+  --black-1: #1E1E1E;
+  --black-2: #2D2D2D;
+  --black-3: #383636;
   --white: #FFFFFF;
-  --grey: #E5E5E5;
+  --grey-light: #E5E5E5;
+  --grey-dark: #383636;
 
   --section-gap: 160px;
 }
 
 :root {
-  --color-text: var(--black);
+  --color-text: var(--black-1);
   --color-background: var(--white);
 }
 
