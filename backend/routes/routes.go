@@ -22,6 +22,7 @@ func RegisterRoutes(r *gin.Engine) {
 	// User
 	r.GET("/users", getUsers)
 	r.GET("/users/:id", getUser)
+	r.GET("/users/username/:username", getUserUsername)
 	r.POST("/users", createUser)
 	r.PUT("/users/:id", updateUser)
 	r.DELETE("/users/:id", deleteUser)
