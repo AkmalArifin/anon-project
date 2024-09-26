@@ -14,10 +14,10 @@ func RegisterRoutes(r *gin.Engine) {
 	r.POST("/login", login)
 	r.POST("/signup", signup)
 
-	// Ask
-	auth.GET("/ask-log", getAskLogByUser)
-	auth.GET("/ask-log/:id", getAskLogByID)
-	r.POST("/ask-log", createAskLog)
+	// Log
+	auth.GET("/log", getLogByUser)
+	auth.GET("/log/:id", getLogByID)
+	r.POST("/log", createLog)
 
 	// User
 	r.GET("/users", getUsers)

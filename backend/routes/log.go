@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getAskLogByID(c *gin.Context) {
+func getLogByID(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 
 	if err != nil {
@@ -16,7 +16,7 @@ func getAskLogByID(c *gin.Context) {
 		return
 	}
 
-	ask, err := models.GetAskByID(id)
+	log, err := models.GetLogByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data"})
@@ -25,52 +25,52 @@ func getAskLogByID(c *gin.Context) {
 
 	userID := c.GetInt64("user_id")
 
-	if ask.UserID != userID {
+	if log.UserID != userID {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorize"})
 		return
 	}
 
-	c.JSON(http.StatusOK, ask)
+	c.JSON(http.StatusOK, log)
 }
 
-func getAskLogByUser(c *gin.Context) {
+func getLogByUser(c *gin.Context) {
 	userID := c.GetInt64("user_id")
 
-	asks, err := models.GetAskByUserID(userID)
+	logs, err := models.GetLogByUserID(userID)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data", "error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, asks)
+	c.JSON(http.StatusOK, logs)
 }
 
-func createAskLog(c *gin.Context) {
-	var question models.Question
-	err := c.ShouldBindJSON(&question)
+func createLog(c *gin.Context) {
+	var message models.Message
+	err := c.ShouldBindJSON(&message)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse data"})
 		return
 	}
 
-	user, err := models.GetUserByUsername(question.Username.String)
+	user, err := models.GetUserByUsername(message.Username.String)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not find user"})
 		return
 	}
 
-	var ask models.Ask
-	ask.UserID = user.ID
-	ask.Question = question.Question
-	err = ask.Save()
+	var log models.Log
+	log.UserID = user.ID
+	log.Message = message.Message
+	err = log.Save()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "err": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, ask)
+	c.JSON(http.StatusOK, log)
 }

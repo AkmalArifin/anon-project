@@ -1,2 +1,0 @@
-GET http://localhost:8082/ask-log
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjYxMTg4OTQsImlhdCI6MTcyNjExMTY5NCwiaWQiOjEsInVzZXJuYW1lIjoiaWthbmlrYW4ifQ.5lzocZDanQE7h9IzhyX8eH6RJU4xCmuTA2pxIlbzZ9M

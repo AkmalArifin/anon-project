@@ -1,0 +1,7 @@
+POST http://localhost:8082/log
+Content-Type: application/json
+
+{
+    "username": "ikanikan",
+    "message": "Hnn? Hnn?"
+}
