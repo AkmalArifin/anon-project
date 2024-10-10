@@ -20,16 +20,16 @@
         <div class="messages-container">
             <div class="messages-navbar">
                 <div class="nav">
-                    <p class="p1">All</p>
-                    <p class="p1">Starred</p>
+                    <p class="p1 nav-button" :class="allFilter" @click="filter = 'all'">All</p>
+                    <p class="p1 nav-button" :class="starFilter" @click="filter = 'star'">Starred</p>
                 </div>
                 <div class="sort">
-                    <font-awesome-icon icon="fa-solid fa-sort-up" class="button-sort"/>
+                    <font-awesome-icon :icon="sortIcon" class="button-sort" @click="sortHandle"/>
                 </div>
             </div>
             <div class="messages">
                 <!-- <p v-for="m in messages" :key="m.id">{{m.message}}</p> -->
-                <Message v-for="m, i in messages" :key="m.id" :id="m.id" :index="i" :message="m.message" :date="m.created_at" :isStarred="m.is_starred" @star="updateStar" @delete="deleteClicked"/>
+                <Message v-for="m, i in showedMessages" :key="m.id" :id="m.id" :index="i" :message="m.message" :date="m.created_at" :isStarred="m.is_starred" @star="updateStar" @delete="deleteClicked"/>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@ import NavbarVue from '../components/Navbar.vue';
 import DeleteModal from '../components/DeleteModal.vue';
 
 import axios from 'axios';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { parseJwt } from '../utils/jwt';
 
@@ -60,6 +60,8 @@ const messages = ref<Message[]>([]);
 const photoUrl = ref("/profile-picture.png")
 const showDeleteModal = ref(false);
 const deleteID = ref(0);
+const filter = ref("all");
+const sortIcon = ref("fa-solid fa-sort-up");
 
 const user = ref({
     id: 0,
@@ -104,7 +106,33 @@ axios.get("http://localhost:8082/log", {
     })
 
 
-/** Responsive Function */
+/** Dynamic  Variables  */
+
+const showedMessages = computed(() => {
+    if (filter.value === 'all') {
+        return messages.value
+    } else if (filter.value === 'star')  {
+        return messages.value.filter(message => message.is_starred === 1)
+    }
+});
+
+const allFilter = computed(() => {
+    if (filter.value === 'all') {
+        return "active"
+    } else {
+        return ""
+    }
+})
+
+const starFilter = computed(() => {
+    if (filter.value === 'star') {
+        return "active"
+    } else {
+        return ""
+    }
+})
+
+/** Dynamic Function */
 
 // make choice to share to other app
 async function shareClicked() {
@@ -142,6 +170,16 @@ async function deleteMessage() {
     showDeleteModal.value = false;
 }
 
+async function sortHandle() {
+    messages.value = messages.value.reverse();
+
+    if (sortIcon.value === 'fa-solid fa-sort-up') {
+        sortIcon.value = 'fa-solid fa-sort-down';
+    } else {
+        sortIcon.value = 'fa-solid fa-sort-up';
+    }
+}
+
 </script>
 
 <script lang="ts">
@@ -159,25 +197,25 @@ export default {
     /* background-color: var(--black-2); */
 }
 
-#profile-picture {
+.profile-container #profile-picture {
     border-radius: 100%;
     height: min(80vw, 200px);
     width: min(80vw, 200    px);
 }
 
-.profile-name {
+.profile-container .profile-name {
     display: flex;
     justify-content: center;
     align-items: center;
     column-gap: 12px;
 }
 
-.count {
+.profile-container .count {
     letter-spacing: 2px;
     padding-top: 2px;
 }
 
-.button-container {
+.profile-container .button-container {
     height: 64px;
     width: 64px;
 
@@ -196,12 +234,12 @@ export default {
     cursor: pointer;
 }
 
-.button-container:hover {
+.profile-container .button-container:hover {
     scale: 1.05;
     transform: translateX(-48%);
 }
 
-.button-icon {
+.profile-container .button-container .button-icon {
     color: var(--white);
     font-size: 32px;
 
@@ -233,12 +271,13 @@ export default {
 }
 
 .messages-navbar .nav > * {
-    /* border-bottom: 4px solid var(--color-secondary); */
     padding-bottom: 2px;
     position: relative;
+
+    cursor: pointer;
 }
 
-.messages-navbar .nav > *:after {
+.messages-navbar .nav .active:after {
     content: '';
     position: absolute;
     width: calc(100% + 10px);
@@ -248,10 +287,12 @@ export default {
     background: var(--color-secondary);
     height: 4px;
     border-radius: 2px 2px 2px 2px;
+    animation: zoom-in .15s;
 }
 
 .messages-navbar .sort .button-sort {
     font-size: 20px;
+    cursor: pointer;
 }
 
 .messages {

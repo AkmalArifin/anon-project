@@ -46,3 +46,12 @@ h4 {
 		opacity:1;
 	}
 }
+
+@keyframes zoom-in {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1
+  }
+}
