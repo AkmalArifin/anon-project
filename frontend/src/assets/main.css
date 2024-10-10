@@ -35,3 +35,14 @@ h4 {
 .logo {
   font-family: var(--ff-logo);
 } 
+
+@keyframes fade-in {
+	from {
+    transform: translateY(-15%);
+		opacity:0;
+	}
+	to {
+    transform: translateY(0%);
+		opacity:1;
+	}
+}

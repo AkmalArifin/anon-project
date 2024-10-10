@@ -17,6 +17,8 @@ func RegisterRoutes(r *gin.Engine) {
 	// Log
 	auth.GET("/log", getLogByUser)
 	auth.GET("/log/:id", getLogByID)
+	auth.PUT("/log/star/:id", starLog)
+	auth.DELETE("/log/delete/:id", deleteLog)
 	r.POST("/log", createLog)
 
 	// User

@@ -23,6 +23,12 @@ async function settingClicked() {
 }
 </script>
 
+<script lang="ts">
+export default {
+    name: "NavbarVue"
+}
+</script>
+
 <style scoped>
 .navbar-container {
     display: flex;

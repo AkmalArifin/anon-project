@@ -74,3 +74,59 @@ func createLog(c *gin.Context) {
 
 	c.JSON(http.StatusOK, log)
 }
+
+func starLog(c *gin.Context) {
+	logID, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse data"})
+		return
+	}
+
+	log, err := models.GetLogByID(logID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not find log", "error": err.Error()})
+		return
+	}
+
+	if log.IsStarred.ValueOrZero() == 0 {
+		log.IsStarred.Int64 = 1
+	} else {
+		log.IsStarred.Int64 = 0
+	}
+
+	err = log.Update()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not update data", "err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, log)
+}
+
+func deleteLog(c *gin.Context) {
+	logID, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse data"})
+		return
+	}
+
+	log, err := models.GetLogByID(logID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not find log", "error": err.Error()})
+		return
+	}
+
+	err = log.Delete()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not delete data", "err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Data has been deleted"})
+}

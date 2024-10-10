@@ -36,11 +36,11 @@ async function loginClicked(event: Event) {
                     } = response.data 
                     sessionStorage.setItem('jwtToken', data.token);
 
-                    router.push({name: 'dashboard'})
+                    router.push({name: 'dashboard'});
                 }   
             });
     } catch (e) {
-        console.error(e)
+        console.error(e);
     }
 }
 

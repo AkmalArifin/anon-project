@@ -16,7 +16,7 @@
   --black-3: #383636;
   --white: #FFFFFF;
   --grey-light: #E5E5E5;
-  --grey-dark: #383636;
+  --grey-dark: #646464;
 
   --section-gap: 160px;
 
@@ -27,6 +27,7 @@
     0 0.9px 1.5px hsla(0, 0%, 0%, 0.045),
     0 3.5px 6px hsla(0, 0%, 0%, 0.09);
   --transition: 0.2s ease-in-out;
+
 }
 
 :root {

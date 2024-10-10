@@ -26,7 +26,7 @@ func GetAllLog() ([]Log, error) {
 
 	for rows.Next() {
 		var log Log
-		err = rows.Scan(&log.ID, &log.UserID, &log.Message, &log.CreatedAt)
+		err = rows.Scan(&log.ID, &log.UserID, &log.Message, &log.IsStarred, &log.CreatedAt)
 
 		if err != nil {
 			return nil, err
@@ -43,7 +43,7 @@ func GetLogByID(logID int64) (Log, error) {
 	row := db.DB.QueryRow(query, logID)
 
 	var log Log
-	err := row.Scan(&log.ID, &log.UserID, &log.Message, &log.CreatedAt)
+	err := row.Scan(&log.ID, &log.UserID, &log.Message, &log.IsStarred, &log.CreatedAt)
 
 	if err != nil {
 		return Log{}, err
@@ -99,6 +99,44 @@ func (l *Log) Save() error {
 	}
 
 	l.ID, err = results.LastInsertId()
+
+	return err
+}
+
+func (l *Log) Update() error {
+	query := `
+	UPDATE log
+	SET is_starred = ?
+	WHERE id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(l.IsStarred, l.ID)
+
+	return err
+}
+
+func (l *Log) Delete() error {
+	query := `
+	DELETE FROM log WHERE id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(l.ID)
 
 	return err
 }
