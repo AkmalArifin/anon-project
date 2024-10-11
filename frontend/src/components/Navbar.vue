@@ -1,7 +1,7 @@
 <template>
     <div class="navbar-container">
         <div class="logo-container">
-            <h3 class="logo" @click="logoClicked">Hnn<span style="color: var(--color-primary);">?</span></h3>
+            <h3 class="logo" @click="logoClicked">Hnn<span style="color: var(--color-primary); font-weight: bold;">?</span></h3>
         </div>
         <div class="nav-container">
             <font-awesome-icon icon="fa-solid fa-gear" class="setting-icon" @click="settingClicked"/>

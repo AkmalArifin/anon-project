@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="logo-container">
-            <h1 class="logo">Hnn<span style="color: var(--color-primary);">?</span></h1>
+            <h1 class="logo">Hnn<span style="color: var(--color-primary); font-weight: bold;">?</span></h1>
         </div>
         <div class="input-container">
             <div class="top"></div>

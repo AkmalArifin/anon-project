@@ -1,5 +1,8 @@
 <template>
     <div class="login-view">
+        <div class="logo-container">
+            <h1 class="logo">Hnn?</h1>
+        </div>
         <div class="card">
             <div class="header">
                 <h3>Login</h3>
@@ -83,8 +86,18 @@ export default {
     height: 100vh;
     width: 100vw;
     display: flex;
+    flex-flow: column;
     align-items: center;
     justify-content: center;
+    row-gap: 32px;
+}
+
+.login-view .logo-container {
+    margin-top: -116px;
+}
+
+.login-view .logo-container .logo {
+    color: var(--white);
 }
 
 .login-view .card {
