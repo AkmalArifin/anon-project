@@ -96,9 +96,8 @@ axios.get("http://localhost:8082/log", {
         'Authorization': `Bearer ${token}`
     }
     }).then(response => {
-        messages.value = response.data;
+        messages.value = response.data || [];
         messages.value = messages.value.reverse();
-        // console.log(messages.value);
     }).catch(error => {
         console.error(error);
 
