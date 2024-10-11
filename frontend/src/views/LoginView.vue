@@ -17,7 +17,7 @@
                         <input type="checkbox" name="remember" id="remember">
                         <label for="remember">  Remember me</label>
                     </div>
-                    <p class="p3 forgot-button">Forgot password?</p>
+                    <p class="p3 forgot-button" @click="handelForgotPassword">Forgot password?</p>
                 </div>
                 <div class="button-container">
                     <button class="login-button p2" @click="loginClicked">Login</button>
@@ -43,6 +43,10 @@ const password = ref("");
 
 async function handleRegister() {
     router.push({name: 'register'})
+}
+
+async function handelForgotPassword() {
+    router.push({name: "forgot-password"})
 }
 
 async function loginClicked(event: Event) {
