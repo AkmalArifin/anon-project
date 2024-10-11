@@ -71,6 +71,20 @@ func GetUserByUsername(username string) (User, error) {
 	return user, nil
 }
 
+func GetUserByEmail(email string) (User, error) {
+	query := `SELECT * FROM users WHERE email = ?`
+	row := db.DB.QueryRow(query, email)
+
+	var user User
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.PhotoProfile, &user.CreatedAt, &user.UpdatedAt, &user.DeletedAt)
+
+	if err != nil {
+		return User{}, err
+	}
+
+	return user, nil
+}
+
 func (u *User) Save() error {
 	query := `
 	INSERT INTO users(username, email, password, photo_profile, created_at, updated_at)

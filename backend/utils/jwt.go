@@ -10,7 +10,7 @@ import (
 
 var key string = os.Getenv("JWT_SECRET_KEY")
 
-func GenerateToken(userID int64, username string) (string, error) {
+func GenerateJWTToken(userID int64, username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":       userID,
 		"username": username,

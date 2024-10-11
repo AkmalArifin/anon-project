@@ -145,7 +145,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(user.ID, user.Username.String)
+	token, err := utils.GenerateJWTToken(user.ID, user.Username.String)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account"})
