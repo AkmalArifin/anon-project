@@ -6,7 +6,7 @@
         <div class="input-container">
             <div class="top"></div>
             <img class="profile-picture" :src="photoUrl" alt="profile picture">
-            <p class="p3" id="counter">{{ count }}/250</p>
+            <p class="p3 counter" :class="countColor">{{ count }}/250</p>
             <textarea id="message" class="p2" name="message" v-model="message"></textarea>
         </div>
         <div class="button-container" @click="sendClicked">
@@ -17,15 +17,25 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 
 const route = useRoute();
-const router = useRouter();
 
 const message = ref("");
-const count = ref(message.value.length);
+const autoHeight = ref("");
+const count = computed(() => {
+    return message.value.length
+})
+const countColor = computed(() => {
+    if (count.value > 250) {
+        return "red"
+    } else {
+        return ""
+    }
+})
+
 
 // Photo Profile
 var photoUrl = "/profile-picture.png"
@@ -39,24 +49,16 @@ axios.get(`http://localhost:8082/users/username/${route.params.username}`)
         console.error(error)
     })
 
-// Setting Textarea
+// Setting Textarea Auto Height
 document.addEventListener('DOMContentLoaded', function () {
     const textarea = document.getElementById("message");
-    const counter = document.getElementById("counter");
 
-    textarea.addEventListener("input", function () {
-        // auto height
-        this.style.height = 'auto';
-        this.style.height = Math.max(this.scrollHeight, 230) + 'px';
-
-        // count
-        count.value = message.value.length;
-        if (count.value > 250) {
-            counter.style.color = 'red';
-        } else {
-            counter.style.color = 'black';
-        }
-    })
+    if (textarea){
+        textarea.addEventListener("input", function () {
+            this.style.height = 'auto';
+            this.style.height = Math.max(this.scrollHeight, 230) + 'px';
+        })
+    }
 })
 
 async function sendClicked() {
@@ -84,7 +86,6 @@ async function sendClicked() {
                     confirmButtonColor: '#8399D9',
                     willClose: () => {
                         message.value = "";
-                        count.value = 0;
                     }
                 });
             }).catch(error => {
@@ -124,7 +125,7 @@ export default {
     margin-top: 48px;
 }
 
-.top {
+.input-container .top {
     height: 66px;
     width: min(80vw, 672px);
 
@@ -135,7 +136,7 @@ export default {
     background: linear-gradient(113deg, rgba(131,153,217,1) 0%, rgba(211,114,137,1) 100%);
 }
 
-.profile-picture {
+.input-container .profile-picture {
     position: absolute;
     height: 96px;
     width: 96px;
@@ -145,14 +146,18 @@ export default {
     transform: translate(-50%, -50%);
 }
 
-#counter {
+.input-container .counter {
     position: absolute;
 
     bottom:12px;
     right: 36px;
 }
 
-#message {
+.input-container .counter.red {
+    color: red;
+}
+
+.input-container #message {
     width: min(80vw, 672px);
     min-height: 230px;
     padding: 82px 36px 44px 36px;
@@ -165,6 +170,8 @@ export default {
     border-radius: 15px;
 
     box-shadow: var(--shadow);
+
+    height: auto;
 }
 
 .button-container {
@@ -188,7 +195,7 @@ export default {
     scale: 1.05;
 }
 
-.button-icon {
+.button-container .button-icon {
     color: var(--white);
     font-size: 28px;
 
