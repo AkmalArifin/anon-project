@@ -121,7 +121,7 @@ func (u *User) Save() error {
 func (u *User) Update() error {
 	query := `
 	UPDATE users
-	SET username = ?, email = ?, password = ?, updated_at = ?
+	SET username = ?, email = ?, photo_profile = ?, updated_at = ?
 	WHERE id = ?
 	`
 
@@ -135,7 +135,7 @@ func (u *User) Update() error {
 
 	u.UpdatedAt.SetValue(time.Now())
 
-	_, err = stmt.Exec(u.Username, u.Email, u.Password, u.PhotoProfile, u.UpdatedAt, u.ID)
+	_, err = stmt.Exec(u.Username, u.Email, u.PhotoProfile, u.UpdatedAt, u.ID)
 
 	return err
 }
@@ -186,4 +186,32 @@ func (u *User) ValidateCredentials() error {
 	u.ID = id
 
 	return nil
+}
+
+func (u *User) UpdatePassword() error {
+	query := `
+	UPDATE users
+	SET password = ?, updated_at = ?
+	WHERE id = ?
+	`
+
+	stmt, err := db.DB.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	u.Password.String, err = utils.HashPassword(u.Password.String)
+
+	if err != nil {
+		return err
+	}
+
+	u.UpdatedAt.SetValue(time.Now())
+
+	_, err = stmt.Exec(u.Password, u.UpdatedAt, u.ID)
+
+	return err
 }

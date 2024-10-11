@@ -26,8 +26,9 @@ func RegisterRoutes(r *gin.Engine) {
 	r.GET("/users/:id", getUser)
 	r.GET("/users/username/:username", getUserUsername)
 	r.POST("/users", createUser)
-	r.PUT("/users/:id", updateUser)
-	r.DELETE("/users/:id", deleteUser)
+	auth.PUT("/users/:id", updateUser)
+	auth.PUT("/users/password/:id", userChangePassword)
+	auth.DELETE("/users/:id", deleteUser)
 
 	// Reset Password
 	r.POST("/reset-password", createResetPassword)
