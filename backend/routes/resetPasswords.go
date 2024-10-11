@@ -76,5 +76,19 @@ func verifyResetPassword(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Authorized"})
+	user, err := models.GetUserByID(expectedResetPassword.UserID.ValueOrZero())
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	token, err := utils.GenerateJWTToken(user.ID, user.Username.ValueOrZero())
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		return
+	}
+
+	c.JSON(http.StatusOK, token)
 }

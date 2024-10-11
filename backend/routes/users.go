@@ -173,3 +173,37 @@ func signup(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, user)
 }
+
+func userChangePassword(c *gin.Context) {
+	userID, err := strconv.ParseInt(c.Param("id"), 10, 64)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request"})
+		return
+	}
+
+	_, err = models.GetUserByID(userID)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request"})
+		return
+	}
+
+	var user models.User
+	err = c.ShouldBindJSON(&user)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request"})
+		return
+	}
+
+	user.ID = userID
+	err = user.UpdatePassword()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Data updated successfully"})
+}

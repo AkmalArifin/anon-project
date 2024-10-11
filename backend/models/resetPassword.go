@@ -50,7 +50,13 @@ func (pr *ResetPassword) Save() error {
 	pr.ExpiresAt.SetValue(time.Now().Add(5 * time.Minute))
 	pr.CreatedAt.SetValue(time.Now())
 
-	_, err = stmt.Exec(pr.UserID, pr.Token, pr.ExpiresAt, pr.CreatedAt)
+	result, err := stmt.Exec(pr.UserID, pr.Token, pr.ExpiresAt, pr.CreatedAt)
+
+	if err != nil {
+		return err
+	}
+
+	pr.ID, err = result.LastInsertId()
 
 	return err
 }
