@@ -44,21 +44,21 @@ func verifyResetPassword(c *gin.Context) {
 	err := c.ShouldBindJSON(&resetPassword)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": err.Error()})
 		return
 	}
 
 	isValid, err := utils.VerifyResetPasswordToken(resetPassword.Token.ValueOrZero())
 
 	if err != nil || !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": err.Error()})
 		return
 	}
 
 	expectedResetPassword, err := models.GetResetPasswordByID(resetPassword.ID)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": err.Error()})
 		return
 	}
 
@@ -79,14 +79,14 @@ func verifyResetPassword(c *gin.Context) {
 	user, err := models.GetUserByID(expectedResetPassword.UserID.ValueOrZero())
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": err.Error()})
 		return
 	}
 
 	token, err := utils.GenerateJWTToken(user.ID, user.Username.ValueOrZero())
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": err.Error()})
 		return
 	}
 
