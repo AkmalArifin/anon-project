@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,11 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type validateError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
+
 func getUsers(c *gin.Context) {
 	users, err := models.GetAllUsers()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Colud not fetch data."})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not fetch data."})
 		return
 	}
 
@@ -133,22 +139,30 @@ func login(c *gin.Context) {
 	var user models.User
 	err := c.ShouldBindJSON(&user)
 
+	var messageErrorPassword, messageErrorServer validateError
+	messageErrorPassword.Field = "password"
+	messageErrorPassword.Message = "Wrong password."
+	messageErrorServer.Field = "password"
+	messageErrorServer.Message = "Internal server error. Please wait and try again."
+
+	fmt.Println(messageErrorPassword)
+
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request", "errors": "Wrong password."})
 		return
 	}
 
 	err = user.ValidateCredentials()
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account", "errors": "Wrong password."})
 		return
 	}
 
 	token, err := utils.GenerateJWTToken(user.ID, user.Username.String)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Could not authorized account", "errors": "Internal server error. Please wait and try again."})
 		return
 	}
 

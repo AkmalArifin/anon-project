@@ -9,8 +9,22 @@
             </div>
             <div class="body">
                 <div class="input">
-                    <input type="text" class="p2" v-model="email" placeholder="Email">
-                    <input type="password" class="p2" v-model="password" placeholder="Password">
+                    <div class="input-container">
+                        <input type="text" class="input-text p2" v-model="userInput.email" placeholder="Email">
+                        <font-awesome-icon v-if="v$.email.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                        <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
+                    </div>
+                    <div class="input-container">
+                        <input type="password" class="input-text p2" v-model="userInput.password" placeholder="Password">
+                        <p>
+                            <font-awesome-icon v-if="v$.password.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="v$.password.$error" :key="v$.password.$errors[0].$uid" class="error message">{{ v$.password.$errors[0].$message }} </span>
+                        </p>
+                        <p>
+                            <font-awesome-icon v-if="serverError !== ''" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="serverError !== ''" class="error message">{{ serverError }} </span>
+                        </p>
+                    </div>
                 </div>
                 <div class="add">
                     <div class="checkbox p3">
@@ -32,46 +46,65 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { ref } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
+import { required, email } from '@vuelidate/validators';
+import { server } from 'typescript';
 
 const router = useRouter();
+const userInput = reactive({
+    email: "",
+    password: ""
+});
+const serverError = ref("")
 
-const email = ref("");
-const password = ref("");
+const rules = computed(() => ({
+    email: {required, email},
+    password: {required}
+}));
 
+
+const v$ = useVuelidate(rules, userInput);
 
 async function handleRegister() {
-    router.push({name: 'register'})
+    router.push({name: 'register'});
 }
 
 async function handelForgotPassword() {
-    router.push({name: "forgot-password"})
+    router.push({name: "forgot-password"});
 }
 
 async function loginClicked(event: Event) {
     event.preventDefault();
-    try {
-        const data = {
-            "email": email.value,
-            "password": password.value
-        }
 
-        const response = axios.post("http://localhost:8082/login", data)
-            .then(response => {
-                if (response.status == 200) {
-                    const data : {
-                        message: string,
-                        token: string,
-                    } = response.data 
-                    sessionStorage.setItem('jwtToken', data.token);
+    const result = await v$.value.$validate()
 
-                    router.push({name: 'dashboard'});
-                }   
-            });
-    } catch (e) {
-        console.error(e);
+    if (!result) {
+        console.log(v$.value.$errors)
+        return
     }
+
+    const data = {
+        "email": userInput.email,
+        "password": userInput.password
+    };
+
+    const response = axios.post("http://localhost:8082/login", data)
+        .then(response => {
+            if (response.status == 200) {
+                const data : {
+                    message: string,
+                    token: string,
+                } = response.data 
+                sessionStorage.setItem('jwtToken', data.token);
+
+                router.push({name: 'dashboard'});
+            }   
+        }).catch(error => {
+            console.log(error.response.data);
+            serverError.value = error.response.data.errors;
+        });
 }
 
 </script>
@@ -130,12 +163,23 @@ export default {
     row-gap: 24px;
 }
 
-.login-view .card .body .input > * {
+.login-view .card .body .input .input-text {
     width: min(320px, 60vw);
     height: 58px;
     padding: 13px 24px;
     border: 1px solid var(--black-1);
     border-radius: 15px;
+}
+
+.login-view .card .body .input .error {
+   text-align: left;
+   color: var(--color-error);
+   white-space: inherit;
+   margin-top: 8px;
+}
+
+.login-view .card .body .input .error.message {
+   margin-left: 8px;
 }
 
 .login-view .card .body .add {

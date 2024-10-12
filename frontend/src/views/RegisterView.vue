@@ -5,7 +5,7 @@
         </div>
         <div class="card">
             <div class="header">
-                <h3>Login</h3>
+                <h3>Register</h3>
             </div>
             <div class="body">
                 <div class="input">
