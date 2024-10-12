@@ -9,7 +9,13 @@
             </div>
             <div class="body">
                 <div class="input">
-                    <input type="text" class="p2" v-model="email" placeholder="Email">
+                    <div class="input-container">
+                        <input type="text" class="input-text p2" v-model="userInput.email" placeholder="Email">
+                        <p>
+                            <font-awesome-icon v-if="v$.email.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
+                        </p>
+                    </div>
                 </div>
                 <div class="button-container">
                     <button class="forgot-password-button p2" @click="forgotPasswordClicked">Next</button>
@@ -39,15 +45,24 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { ref } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core';
+import { required, email } from '@vuelidate/validators';
 
 const router = useRouter();
 
-const email = ref("");
+const userInput = reactive({
+    email: ""
+})
 const showRequest = ref(true);
 const showNext = ref(false);
 
+const rules = computed(() => ({
+    email: {required, email}
+}))
+
+const v$ = useVuelidate(rules, userInput)
 
 async function handleCancel() {
     router.push({name: 'login'})
@@ -56,8 +71,15 @@ async function handleCancel() {
 async function forgotPasswordClicked(event: Event) {
     event.preventDefault();
 
+    const result = await v$.value.$validate()
+
+    if (!result) {
+        console.log(v$.value.$errors)
+        return
+    }
+
     const data = {
-        "email": email.value
+        "email": userInput.email
     }
     
     axios.post("http://localhost:8082/reset-password", data)
@@ -130,12 +152,23 @@ export default {
     row-gap: 24px;
 }
 
-.forgot-password-view .card .body .input > * {
+.forgot-password-view .card .body .input .input-text {
     width: min(320px, 60vw);
     height: 58px;
     padding: 13px 24px;
     border: 1px solid var(--black-1);
     border-radius: 15px;
+}
+
+.forgot-password-view .card .body .input .error {
+   text-align: left;
+   color: var(--color-error);
+   white-space: inherit;
+   margin-top: 8px;
+}
+
+.forgot-password-view .card .body .input .error.message {
+   margin-left: 8px;
 }
 
 .forgot-password-view .card .body .add {
