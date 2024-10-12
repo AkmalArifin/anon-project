@@ -9,9 +9,26 @@
             </div>
             <div class="body">
                 <div class="input">
-                    <input type="text" class="p2" v-model="username" placeholder="Username">
-                    <input type="text" class="p2" v-model="email" placeholder="Email">
-                    <input type="password" class="p2" v-model="password" placeholder="Password">
+                    <div class="input-container">
+                        <input type="text" class="input-text p2" v-model="userInput.username" placeholder="Username">
+                        <font-awesome-icon v-if="v$.username.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                        <span v-if="v$.username.$error" :key="v$.username.$errors[0].$uid" class="error message">{{ v$.username.$errors[0].$message }} </span>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" class="input-text p2" v-model="userInput.email" placeholder="Email">
+                        <font-awesome-icon v-if="v$.email.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                        <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
+                    </div>
+                    <div class="input-container">
+                        <input type="password" class="input-text p2" v-model="userInput.password" placeholder="Password">
+                        <font-awesome-icon v-if="v$.password.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                        <span v-if="v$.password.$error" :key="v$.password.$errors[0].$uid" class="error message">{{ v$.password.$errors[0].$message }} </span>
+                    </div>
+                    <div class="input-container">
+                        <input type="password" class="input-text p2" v-model="userInput.confirmPassword" placeholder="Confirm Password">
+                        <font-awesome-icon v-if="v$.confirmPassword.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                        <span v-if="v$.confirmPassword.$error" :key="v$.confirmPassword.$errors[0].$uid" class="error message">{{ v$.confirmPassword.$errors[0].$message }} </span>
+                    </div>
                 </div>
                 <div class="button-container">
                     <button class="register-button p2" @click="handleRegister">Register</button>
@@ -26,14 +43,31 @@
 
 <script setup lang="ts">
 import axios from 'axios';
-import { ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useVuelidate } from '@vuelidate/core'
+import { required, email, minLength, maxLength, sameAs, helpers } from '@vuelidate/validators'
+import passwordRule from '../validators/password'
 
 const router = useRouter();
 
-const username = ref("");
-const email = ref("");
-const password = ref("");
+const userInput = reactive({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+});
+
+const rules = computed(() => ({
+    username: {required, minLength: minLength(6), maxLength: maxLength(30)},
+    email: {required, email},
+    password: {required, minLength: minLength(8), passwordRule: helpers.withMessage("Must containt at least 1 number", passwordRule)},
+    confirmPassword: {required, sameAs: sameAs(userInput.password)}
+}));
+
+const v$ = useVuelidate(rules, userInput);
+
+console.log(v$);
 
 async function handleLogin() {
     router.push({name: "login"});
@@ -41,10 +75,18 @@ async function handleLogin() {
 
 async function handleRegister(event: Event) {
     event.preventDefault();
+
+    const result = await v$.value.$validate();
+    if (!result) {
+        console.log(v$.value.$errors);
+        console.log(v$.value.confirmPassword.$errors[0].$message)
+        return
+    }
+
     const data = {
-        "username": username.value,
-        "email": email.value,
-        "password": password.value
+        "username": userInput.username,
+        "email": userInput.email,
+        "password": userInput.password
     }
 
     await axios.post("http://localhost:8082/signup", data)
@@ -53,6 +95,7 @@ async function handleRegister(event: Event) {
         }).catch(error => {
             console.error(error.response);
         });
+
 }
 
 </script>
@@ -87,7 +130,7 @@ export default {
 
 .register-view .card {
     background: var(--white);
-    height: 558px;
+    height: auto;
     width: min(510px, 80vw);
     padding: 48px min(96px, 10vw);
     border: none;
@@ -111,12 +154,23 @@ export default {
     row-gap: 24px;
 }
 
-.register-view .card .body .input > * {
+.register-view .card .body .input .input-text {
     width: min(320px, 60vw);
     height: 58px;
     padding: 13px 24px;
     border: 1px solid var(--black-1);
     border-radius: 15px;
+}
+
+.register-view .card .body .input .error {
+   text-align: left;
+   color: var(--color-error);
+   white-space: inherit;
+   margin-top: 8px;
+}
+
+.register-view .card .body .input .error.message {
+   margin-left: 8px;
 }
 
 .register-view .card .body .button-container {
