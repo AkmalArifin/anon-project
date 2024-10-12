@@ -139,7 +139,7 @@ export default {
 
 .login-view .card {
     background: var(--white);
-    height: 493px;
+    height: auto;
     width: min(510px, 80vw);
     padding: 48px min(96px, 10vw);
     border: none;
