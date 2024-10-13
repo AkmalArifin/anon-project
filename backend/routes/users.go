@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,11 +8,6 @@ import (
 	"example.com/anon-project/utils"
 	"github.com/gin-gonic/gin"
 )
-
-type validateError struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
 
 func getUsers(c *gin.Context) {
 	users, err := models.GetAllUsers()
@@ -139,14 +133,6 @@ func login(c *gin.Context) {
 	var user models.User
 	err := c.ShouldBindJSON(&user)
 
-	var messageErrorPassword, messageErrorServer validateError
-	messageErrorPassword.Field = "password"
-	messageErrorPassword.Message = "Wrong password."
-	messageErrorServer.Field = "password"
-	messageErrorServer.Message = "Internal server error. Please wait and try again."
-
-	fmt.Println(messageErrorPassword)
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request", "errors": "Wrong password."})
 		return
@@ -181,7 +167,9 @@ func signup(c *gin.Context) {
 	err = user.Save()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data"})
+		match := utils.GetDuplicateError(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error(), "field": match[2], "value": match[1]})
+		// c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error()})
 		return
 	}
 

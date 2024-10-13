@@ -11,13 +11,25 @@
                 <div class="input">
                     <div class="input-container">
                         <input type="text" class="input-text p2" v-model="userInput.username" placeholder="Username">
-                        <font-awesome-icon v-if="v$.username.$error" icon="fa-solid fa-circle-exclamation" class="error" />
-                        <span v-if="v$.username.$error" :key="v$.username.$errors[0].$uid" class="error message">{{ v$.username.$errors[0].$message }} </span>
+                        <p>
+                            <font-awesome-icon v-if="v$.username.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="v$.username.$error" :key="v$.username.$errors[0].$uid" class="error message">{{ v$.username.$errors[0].$message }} </span>
+                        </p>
+                        <p>
+                            <font-awesome-icon v-if="serverError.field.includes('username')" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="serverError.field.includes('username')" class="error message">{{ serverError.value }} is already taken!</span>
+                        </p>
                     </div>
                     <div class="input-container">
                         <input type="text" class="input-text p2" v-model="userInput.email" placeholder="Email">
-                        <font-awesome-icon v-if="v$.email.$error" icon="fa-solid fa-circle-exclamation" class="error" />
-                        <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
+                        <p>
+                            <font-awesome-icon v-if="v$.email.$error" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
+                        </p>
+                        <p>
+                            <font-awesome-icon v-if="serverError.field.includes('email')" icon="fa-solid fa-circle-exclamation" class="error" />
+                            <span v-if="serverError.field.includes('email')" class="error message">{{ serverError.value }} is already taken!</span>
+                        </p>
                     </div>
                     <div class="input-container">
                         <input type="password" class="input-text p2" v-model="userInput.password" placeholder="Password">
@@ -48,6 +60,7 @@ import { useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, maxLength, sameAs, helpers } from '@vuelidate/validators'
 import passwordRule from '../validators/password'
+import { server } from 'typescript';
 
 const router = useRouter();
 
@@ -57,6 +70,11 @@ const userInput = reactive({
     password: "",
     confirmPassword: ""
 });
+
+const serverError = reactive({
+    field: "",
+    value: ""
+})
 
 const rules = computed(() => ({
     username: {required, minLength: minLength(6), maxLength: maxLength(30)},
@@ -94,6 +112,8 @@ async function handleRegister(event: Event) {
             router.push({name: "login"});
         }).catch(error => {
             console.error(error.response);
+            serverError.field = error.response.data.field
+            serverError.value = error.response.data.value
         });
 
 }
