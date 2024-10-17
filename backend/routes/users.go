@@ -97,7 +97,8 @@ func updateUser(c *gin.Context) {
 	err = user.Update()
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error()})
+		match := utils.GetDuplicateError(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": match, "field": match[2], "value": match[1]})
 		return
 	}
 
@@ -169,7 +170,6 @@ func signup(c *gin.Context) {
 	if err != nil {
 		match := utils.GetDuplicateError(err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error(), "field": match[2], "value": match[1]})
-		// c.JSON(http.StatusInternalServerError, gin.H{"message": "Could not store data", "error": err.Error()})
 		return
 	}
 

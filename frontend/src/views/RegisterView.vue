@@ -60,7 +60,6 @@ import { useRouter } from 'vue-router';
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, minLength, maxLength, sameAs, helpers } from '@vuelidate/validators'
 import passwordRule from '../validators/password'
-import { server } from 'typescript';
 
 const router = useRouter();
 
@@ -79,7 +78,7 @@ const serverError = reactive({
 const rules = computed(() => ({
     username: {required, minLength: minLength(6), maxLength: maxLength(30)},
     email: {required, email},
-    password: {required, minLength: minLength(8), passwordRule: helpers.withMessage("Must containt at least 1 number", passwordRule)},
+    password: {required, minLength: minLength(8), passwordRule: helpers.withMessage("Must contain at least 1 number", passwordRule)},
     confirmPassword: {required, sameAs: sameAs(userInput.password)}
 }));
 
