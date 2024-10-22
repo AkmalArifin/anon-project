@@ -19,7 +19,7 @@
                 </div>
                 <div class="button-container">
                     <button class="p2 button" @click="handleEdit">Edit</button>
-                    <button class="p2 button" @click="handleChangePassword">Change Password</button>
+                    <button class="p2 button" @click="handleChangePassword">Change Password</button> 
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
                     <div class="data-container">
                         <span class="p2 title">Username</span>
                         <div>
-                            <input type="text" v-model="editUser.username" class="p2 value" @blur="v$.username.$touch">
+                            <input type="text" v-model="userInput.username" class="p2 value" @blur="v$.username.$touch()">
                             <p>
                                 <font-awesome-icon class="error" icon="fa-solid fa-circle-exclamation" v-if="v$.username.$error"/>
                                 <span class="error message" v-if="v$.username.$error">{{ v$.username.$errors[0].$message }}</span>
@@ -53,8 +53,6 @@
                 </div>
             </div>
         </div>
-        <div class="card change-password" v-if="showChangePassword"></div>
-        <div class="card new-password" v-if="showNewPassword"></div>
     </div>
 </template>
 
@@ -67,12 +65,13 @@ import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, maxLength, helpers, sameAs } from '@vuelidate/validators';
 import passwordRule from '../validators/password';
 import { server } from 'typescript';
+import { useRouter } from 'vue-router';
 
-const photoUrl = ref("/profile-picture.png")
+const router = useRouter();
+
+const photoUrl = ref("/profile-picture.png");
 const showData = ref(true);
 const showEdit = ref(false);
-const showChangePassword = ref(false);
-const showNewPassword = ref(false);
 const user = ref({
     id: 0,
     username: "",
@@ -82,26 +81,23 @@ const user = ref({
     created_at: "",
     deleted_at: ""
 })
-const editUser = reactive({
+const userInput = reactive({
     id: 0,
     username: "",
     email: "",
     photo_profile: "",
-    password: "",
-    confirmPassword: ""
 })
 
 const serverError = reactive({
     field: "",
     value: ""
 })
+
 const rules = computed(() => ({
     username: {required, minLength: minLength(6), maxLength: maxLength(30)},
-    password: {required, minLength: minLength(8), passwordRule: helpers.withMessage("Must contain at least 1 number", passwordRule)},
-    confirmPassword: {required, sameAs: sameAs(editUser.password)}
 }))
 
-const v$ = useVuelidate(rules, editUser)
+const v$ = useVuelidate(rules, userInput)
 
 const token = sessionStorage.getItem('jwtToken');
 const parsedToken = parseJwt(token);
@@ -121,17 +117,17 @@ axios.get(`http://localhost:8082/users/${parsedToken.id}`)
 
 /** Function */
 async function handleEdit() {
-    editUser.id = user.value.id;
-    editUser.username = user.value.username;
-    editUser.email = user.value.email;
-    editUser.photo_profile = user.value.photo_profile;
+    userInput.id = user.value.id;
+    userInput.username = user.value.username;
+    userInput.email = user.value.email;
+    userInput.photo_profile = user.value.photo_profile;
 
     showEdit.value = true;
     showData.value = false;
 }
 
 async function handleChangePassword() {
-
+    router.push({name: "change-password"})
 }
 
 async function handleCancel() {
@@ -146,19 +142,19 @@ async function handleSave() {
         return
     }
     const data = {
-        "username": editUser.username,
-        "email": editUser.email,
-        "photo_profile": editUser.photo_profile,
+        "username": userInput.username,
+        "email": userInput.email,
+        "photo_profile": userInput.photo_profile,
     }
 
-    await axios.put(`http://localhost:8082/users/${editUser.id}`, data, {
+    await axios.put(`http://localhost:8082/users/${userInput.id}`, data, {
         headers: {
             "Authorization": `Bearer ${token}`
         }
     }).then(response => {
-        user.value.username = editUser.username;
-        user.value.email = editUser.email;
-        user.value.photo_profile = editUser.photo_profile;
+        user.value.username = userInput.username;
+        user.value.email = userInput.email;
+        user.value.photo_profile = userInput.photo_profile;
         serverError.field = "";
         serverError.value = "";
 
@@ -189,6 +185,17 @@ input {
 input:focus {
   outline: none;         /* Remove the outline */
   box-shadow: none;      /* Remove any shadow */
+}
+
+.error {
+    text-align: left;
+    color: var(--color-error);
+    white-space: inherit;
+    margin-top: 8px;
+}
+
+.error.message {
+    margin-left: 8px;
 }
 
 .profile-page {
@@ -230,17 +237,6 @@ input:focus {
     margin-bottom: 24px;
 }
 
-.profile-container .data .data-container .error {
-    text-align: left;
-    color: var(--color-error);
-    white-space: inherit;
-    margin-top: 8px;
-}
-
-.profile-container .data .data-container .error.message {
-    margin-left: 8px;
-}
-
 .profile-container .data .data-container .title {
     grid-area: title;
     font-weight: 600;
@@ -275,7 +271,5 @@ input:focus {
 .profile-container .button-container .button:hover {
     scale: 1.05;
 }
-
-
 
 </style>

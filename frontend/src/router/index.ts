@@ -7,6 +7,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import ChangePasswordView from '@/views/ChangePasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +51,11 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView
+    },
+    {
+      path: '/change-password',
+      name: 'change-password',
+      component: ChangePasswordView
     }
   ]
 })

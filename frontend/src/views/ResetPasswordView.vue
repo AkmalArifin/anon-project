@@ -44,8 +44,8 @@ const router = useRouter();
 
 const password = ref("");
 const confirmPassword = ref("");
-const showReset = ref(true);
-const showUnauthorized = ref(false);
+const showReset = ref(false);
+const showUnauthorized = ref(true);
 
 const id = route.query.id as string
 const token = route.query.token as string
@@ -54,6 +54,8 @@ const data = {
     "id": parseInt(id ,10),
     "token": token
 }
+
+console.log(data)
 
 axios.post("http://localhost:8082/reset-password/verify", data)
     .then(response => {
