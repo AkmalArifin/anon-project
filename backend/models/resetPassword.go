@@ -47,7 +47,7 @@ func (pr *ResetPassword) Save() error {
 	token := utils.GenerateResetPasswordToken(pr.UserID.ValueOrZero())
 
 	pr.Token.SetValid(token)
-	pr.ExpiresAt.SetValue(time.Now().Add(5 * time.Minute))
+	pr.ExpiresAt.SetValue(time.Now().Add(30 * time.Minute))
 	pr.CreatedAt.SetValue(time.Now())
 
 	result, err := stmt.Exec(pr.UserID, pr.Token, pr.ExpiresAt, pr.CreatedAt)

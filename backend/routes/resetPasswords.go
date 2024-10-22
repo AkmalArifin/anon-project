@@ -65,14 +65,14 @@ func verifyResetPassword(c *gin.Context) {
 	isValid = expectedResetPassword.Token.ValueOrZero() == resetPassword.Token.ValueOrZero()
 
 	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": "Reset password not same"})
 		return
 	}
 
 	isValid = time.Now().Before(expectedResetPassword.ExpiresAt.Time)
 
 	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Unauthorized", "error": "Have reached time limit"})
 		return
 	}
 
