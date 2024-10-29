@@ -40,7 +40,7 @@ h4 {
   margin-top: 16px;
 }
 
-@keyframes fade-in {
+@keyframes fade-in-down {
 	from {
     transform: translateY(-15%);
 		opacity:0;
@@ -57,5 +57,14 @@ h4 {
   }
   to {
     scale: 1
+  }
+}
+
+@keyframes fade-in-out {
+  0%, 100% {
+    opacity: 0;
+  }
+  10%, 90% {
+    opacity: 1;
   }
 }

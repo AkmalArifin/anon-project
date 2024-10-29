@@ -76,7 +76,7 @@ export default {
     padding: 48px 72px;
     border: 1px solid var(--black-1);
     border-radius: 15px;
-    animation: fade-in .5s;
+    animation: fade-in-down .5s;
 }
 
 .modal .modal-container .body {
