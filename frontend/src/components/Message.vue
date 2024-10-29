@@ -5,7 +5,7 @@
         <div class="action-button">
             <div class="button-1">
                 <font-awesome-icon icon="fa-solid fa-star" class="button star" :class="starYellow" @click="handleStar"/>
-                <font-awesome-icon icon="fa-solid fa-paper-plane" class="button share"/>
+                <!-- <font-awesome-icon icon="fa-solid fa-paper-plane" class="button share"/> -->
             </div>
             <div class="button-2">
                 <font-awesome-icon icon="fa-solid fa-trash" class="button trash" @click="handleDelete"/>
