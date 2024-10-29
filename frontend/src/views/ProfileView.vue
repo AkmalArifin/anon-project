@@ -31,7 +31,7 @@
                     <div class="data-container">
                         <span class="p2 title">Username</span>
                         <div>
-                            <input type="text" v-model="userInput.username" class="p2 value" @blur="v$.username.$touch()">
+                            <input type="text" v-model="userInput.username" class="p2 value" @blur="v$.username.$touch()" @keyup.enter="handleSave">
                             <p>
                                 <font-awesome-icon class="error" icon="fa-solid fa-circle-exclamation" v-if="v$.username.$error"/>
                                 <span class="error message" v-if="v$.username.$error">{{ v$.username.$errors[0].$message }}</span>

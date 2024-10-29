@@ -37,7 +37,7 @@
                         <span v-if="v$.password.$error" :key="v$.password.$errors[0].$uid" class="error message">{{ v$.password.$errors[0].$message }} </span>
                     </div>
                     <div class="input-container">
-                        <input type="password" class="input-text p2" v-model="userInput.confirmPassword" placeholder="Confirm Password">
+                        <input type="password" class="input-text p2" v-model="userInput.confirmPassword" placeholder="Confirm Password" @keyup.enter="handleRegister">
                         <font-awesome-icon v-if="v$.confirmPassword.$error" icon="fa-solid fa-circle-exclamation" class="error" />
                         <span v-if="v$.confirmPassword.$error" :key="v$.confirmPassword.$errors[0].$uid" class="error message">{{ v$.confirmPassword.$errors[0].$message }} </span>
                     </div>

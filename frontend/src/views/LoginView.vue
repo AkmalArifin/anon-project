@@ -15,7 +15,7 @@
                         <span v-if="v$.email.$error" :key="v$.email.$errors[0].$uid" class="error message">{{ v$.email.$errors[0].$message }} </span>
                     </div>
                     <div class="input-container">
-                        <input type="password" class="input-text p2" v-model="userInput.password" placeholder="Password">
+                        <input type="password" class="input-text p2" v-model="userInput.password" placeholder="Password" @keyup.enter="loginClicked">
                         <p>
                             <font-awesome-icon v-if="v$.password.$error" icon="fa-solid fa-circle-exclamation" class="error" />
                             <span v-if="v$.password.$error" :key="v$.password.$errors[0].$uid" class="error message">{{ v$.password.$errors[0].$message }} </span>

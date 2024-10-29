@@ -10,7 +10,7 @@
             <div class="body">
                 <div class="input">
                     <input type="password" class="p2" v-model="password" placeholder="Password">
-                    <input type="password" class="p2" v-model="confirmPassword" placeholder="Confirm Password">
+                    <input type="password" class="p2" v-model="confirmPassword" placeholder="Confirm Password" @keyup.enter="handleResetPassword">
                 </div>
                 <div class="button-container">
                     <button class="reset-password-button p2" @click="handleResetPassword">Reset Password</button>
