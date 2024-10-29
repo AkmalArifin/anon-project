@@ -16,6 +16,9 @@
             <div class="button-container">
                 <font-awesome-icon icon="fa-solid fa-share-nodes" class="button-icon" @click="shareClicked"/>
             </div>
+            <div>
+                <p class="p3 alert" v-if="showAlert">Link Copied!</p>
+            </div>
         </div>
         <div class="messages-container">
             <div class="messages-navbar">
@@ -62,6 +65,7 @@ const showDeleteModal = ref(false);
 const deleteID = ref(0);
 const filter = ref("all");
 const sortIcon = ref("fa-solid fa-sort-up");
+const showAlert = ref(false);
 
 const user = ref({
     id: 0,
@@ -135,6 +139,18 @@ const starFilter = computed(() => {
 
 // make choice to share to other app
 async function shareClicked() {
+    const shareRoute = router.resolve({ name: "ask", params: {username: user.value.username}});
+    const fullLink = window.location.origin + shareRoute.fullPath;
+
+    navigator.clipboard.writeText(fullLink)
+        .then(() => {
+            showAlert.value = true;
+            setTimeout(() => {
+                showAlert.value = false;
+            }, 2000)
+        }).catch(error => {
+            console.error(error)
+        })
 }
 
 // send post to update star
@@ -153,7 +169,7 @@ async function updateStar(id: number) {
             'Authorization': `Bearer ${token}`
         }
     }).then(response => {
-        // console.log(response)
+
     }).catch(error => {
         console.error(error.response);
     })
@@ -247,6 +263,19 @@ export default {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+.profile-container .alert {
+    background-color: var(--black-2);
+    color: var(--white);
+    width: 120px;
+    padding: 2px 4px;
+    border-radius: 15px;
+    
+    position: absolute;
+    left: calc(50% + 32px + 12px);
+    top: 410px;
+    animation: fade-in-out 2s linear;
 }
 
 /* Messages */
