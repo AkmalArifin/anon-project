@@ -37,7 +37,7 @@
 <h3 align="center">Anon Project</h3>
 
   <p align="center">
-    Anonymous question platform with account creation, targeted messaging, and message filtering features. Designed as a comprehensive project to deepen my full-stack programming skills.
+    Anonymous question platform with account creation, targeted messaging, and message filtering features.
   </p>
 </div>
 
@@ -76,7 +76,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `AkmalArifin`, `anon-project`, `menujuakmal`, `akmalarifin`, `menujuakmal@gmail.com`, `email`, `Hnn?`, `rsonal project developing websites for selling handcrafted items. Aimed at learning foundational backend and frontend skills, this project implements essential e-commerce features`
+Anon Project is my personal website project to deepen my full-stack programming skills. This project inspired by app called ngl in mobile phone, and I inspired to build similiar thing but in form of website.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -86,6 +86,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 * [![Vue][Vue.js]][Vue-url]
 * [![Go][Golang]][Go-url]
+* [![MySQL][MySQL]][MySQL-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -94,12 +95,14 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To run this project locally, you need several things to do.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+Install preqrequisites app that needed to install this project.
+* [MySQL][MySQL-url]
+* [Node.js][Nodejs-url]
+* [Golang][Go-url]
 * npm
   ```sh
   npm install npm@latest -g
@@ -107,20 +110,21 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
    git clone https://github.com/AkmalArifin/anon-project.git
    ```
-3. Install NPM packages
+2. Create new database in MySQL and export from `/backend/db.sql`
+3. 
+4. Install NPM packages
    ```sh
    npm install
    ```
-4. Enter your API in `config.js`
+5. Enter your API in `config.js`
    ```js
    const API_KEY = 'ENTER YOUR API';
    ```
-5. Change git remote url to avoid accidental pushes to base project
+6. Change git remote url to avoid accidental pushes to base project
    ```sh
    git remote set-url origin AkmalArifin/anon-project
    git remote -v # confirm the changes
@@ -135,63 +139,12 @@ This is an example of how to list things you need to use the software and how to
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/AkmalArifin/anon-project/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Top contributors:
-
-<a href="https://github.com/AkmalArifin/anon-project/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=AkmalArifin/anon-project" alt="contrib.rocks image" />
-</a>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@menujuakmal](https://twitter.com/menujuakmal) - email@menujuakmal@gmail.com.com
+Muhammad Akmal Arifin - [@menujuakmal](https://twitter.com/menujuakmal) - menujuakmal@gmail.com.com
 
 Project Link: [https://github.com/AkmalArifin/anon-project](https://github.com/AkmalArifin/anon-project)
 
@@ -229,3 +182,6 @@ Project Link: [https://github.com/AkmalArifin/anon-project](https://github.com/A
 [Vue-url]: https://vuejs.org/
 [Golang]: https://img.shields.io/badge/Go-00ADD8?logo=Go&logoColor=white&style=for-the-badge
 [Go-url]: https://go.dev/
+[MySQL]: https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white
+[MySQL-url]: https://www.mysql.com/
+[Nodejs-url]: https://nodejs.org/en
