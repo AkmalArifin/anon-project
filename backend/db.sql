@@ -17,4 +17,14 @@ CREATE TABLE `log` (
   `created_at` datetime
 );
 
+CREATE TABLE `password_resets` (
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `user_id` integer,
+  `token` varchar(255),
+  `expires_at` datetime,
+  `created_at` datetime
+);
+
 ALTER TABLE `log` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `password_resets` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
