@@ -83,6 +83,17 @@ async function forgotPasswordClicked(event: Event) {
     }
     
     axios.post("http://localhost:8082/reset-password", data)
+        .then(response => {
+            // console.log(response.data);
+            const data = response.data.data;
+            const encodedToken = encodeURIComponent(data.token)
+
+            const currentHost = window.location.host;
+            const url = `http://${currentHost}/reset-password?id=${data.user_id}&token=${encodedToken}`
+            console.log(url)
+        }).catch(error => {
+            console.error(error.response);
+        })
 
     showRequest.value = false
     showNext.value = true

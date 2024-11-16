@@ -55,11 +55,12 @@ const data = {
     "token": token
 }
 
-console.log(data)
-
 axios.post("http://localhost:8082/reset-password/verify", data)
     .then(response => {
-        console.log(response.data)
+        showUnauthorized.value = false
+        showReset.value = true
+
+        // console.log(response.data)
         sessionStorage.setItem('jwtToken', response.data);
     })
     .catch(error => {
@@ -91,7 +92,7 @@ async function handleResetPassword(event: Event) {
     }).then(response => {
         router.push({name: 'login'})
     }).catch(error => {
-        alert("error")
+        console.log(error.response)
     })
 }
 
