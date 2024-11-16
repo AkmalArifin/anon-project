@@ -18,20 +18,12 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/AkmalArifin/anon-project">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="screenshots/logo.png" alt="Logo" height="80">
   </a>
 
 <h3 align="center">Anon Project</h3>
@@ -61,9 +53,6 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
@@ -73,8 +62,6 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
 
 Anon Project is my personal website project to deepen my full-stack programming skills. This project inspired by app called ngl in mobile phone, and I inspired to build similiar thing but in form of website.
 
@@ -114,20 +101,19 @@ Install preqrequisites app that needed to install this project.
    ```sh
    git clone https://github.com/AkmalArifin/anon-project.git
    ```
-2. Create new database in MySQL and export from `/backend/db.sql`
-3. 
-4. Install NPM packages
+2. Create new database in MySQL and import from `/backend/db.sql`
+3. Create .env file from `backend` folder
+4. run the server in backend folder
+   ```sh
+   go run .
+   ```
+5. go to frontend folder, and run
    ```sh
    npm install
    ```
-5. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-6. Change git remote url to avoid accidental pushes to base project
+6. run the web on local
    ```sh
-   git remote set-url origin AkmalArifin/anon-project
-   git remote -v # confirm the changes
+   npm run dev
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -137,7 +123,25 @@ Install preqrequisites app that needed to install this project.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### Login
+![login page](screenshots/login.jpeg)
+
+### Register
+![login page](screenshots/register.jpeg)
+
+### Forgot Password
+Currently to forgot password, the link is send through console log.
+![login page](screenshots/forgot-password.jpeg)
+
+### Dashboard
+![login page](screenshots/dashboard.jpeg)
+
+### Ask
+To ask you got to this path `/ask/username`
+![login page](screenshots/ask.jpeg)
+
+### Profile
+![login page](screenshots/profile.jpeg)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -155,9 +159,7 @@ Project Link: [https://github.com/AkmalArifin/anon-project](https://github.com/A
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [Best README Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
