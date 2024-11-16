@@ -8,7 +8,7 @@
             <div class="body">
                 <div class="input">
                     <div class="input-container">
-                        <input type="password" class="p2 input-text" v-model="userInput.password" placeholder="password">
+                        <input type="password" class="p2 input-text" v-model="userInput.password" placeholder="Password">
                         <p>
                             <font-awesome-icon class="error" icon="fa-solid fa-circle-exclamation" v-if="serverError.field.includes('password')"/>
                             <span class="error message" v-if="serverError.field.includes('password')">{{ serverError.message }}</span>
@@ -28,14 +28,14 @@
             <div class="body">
                 <div class="input">
                     <div class="input-container">
-                        <input type="password" class="p2 input-text" v-model="userInput.newPassword" placeholder="password" @blur="v$.newPassword.$touch()">
+                        <input type="password" class="p2 input-text" v-model="userInput.newPassword" placeholder="Password" @blur="v$.newPassword.$touch()">
                         <p>
                             <font-awesome-icon class="error" icon="fa-solid fa-circle-exclamation" v-if="v$.newPassword.$error"/>
                             <span class="error message" v-if="v$.newPassword.$error">{{ v$.newPassword.$errors[0].$message }}</span>
                         </p>
                     </div>
                     <div class="input-container">
-                        <input type="password" class="p2 input-text" v-model="userInput.confirmPassword" placeholder="password" @blur="v$.confirmPassword.$touch()" @keyup.enter="handleSave">
+                        <input type="password" class="p2 input-text" v-model="userInput.confirmPassword" placeholder="Confirm Password" @blur="v$.confirmPassword.$touch()" @keyup.enter="handleSave">
                         <p>
                             <font-awesome-icon class="error" icon="fa-solid fa-circle-exclamation" v-if="v$.confirmPassword.$error"/>
                             <span class="error message" v-if="v$.confirmPassword.$error">{{ v$.confirmPassword.$errors[0].$message }}</span>
@@ -70,8 +70,9 @@ const props = defineProps<{
     email?: number
 }>()
 
-const showVerify = ref(false)
-const showNewPassword = ref(true)
+const email = ref("")
+const showVerify = ref(true)
+const showNewPassword = ref(false)
 const userInput = reactive({
     password: "",
     newPassword: "",
@@ -89,8 +90,17 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, userInput);
 
+/** Get Data */
+
 const token = sessionStorage.getItem("jwtToken");
 const parsedToken = parseJwt(token)
+
+axios.get(`http://localhost:8082/users/${parsedToken.id}`)
+    .then(response => {
+        email.value = response.data.email
+    }).catch(error => {
+        console.error(error);
+    })
 
 async function handleCancel() {
     router.push({name: "profile"})
@@ -98,7 +108,7 @@ async function handleCancel() {
 
 async function handleNext() {
     const data = {
-        email: props.email,
+        email: email.value,
         password: userInput.password
     };
 
